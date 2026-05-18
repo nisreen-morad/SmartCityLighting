@@ -7,9 +7,11 @@ public class StreetSensor {
     private List<LightObserver> observers;
     private String timeOfDay;
     private boolean motionDetected;
+    private LightingStrategy currentStrategy;
 
     public StreetSensor() {
         this.observers = new ArrayList<>();
+        this.currentStrategy = new NormalStrategy(); // الاستراتيجية الافتراضية
     }
 
     public void addObserver(LightObserver observer) {
@@ -28,9 +30,20 @@ public class StreetSensor {
         notifyObservers();
     }
 
+    public void setSensorData(String timeOfDay, boolean motionDetected, LightingStrategy strategy) {
+        this.timeOfDay = timeOfDay;
+        this.motionDetected = motionDetected;
+        this.currentStrategy = strategy;
+        notifyObservers();
+    }
+
     private void notifyObservers() {
         for (LightObserver observer : observers) {
-            observer.update(timeOfDay, motionDetected);
+            observer.update(timeOfDay, motionDetected, currentStrategy);
         }
+    }
+
+    public LightingStrategy getCurrentStrategy() {
+        return currentStrategy;
     }
 }
