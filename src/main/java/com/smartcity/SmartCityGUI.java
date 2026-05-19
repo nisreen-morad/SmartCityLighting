@@ -39,13 +39,13 @@ public class SmartCityGUI extends JFrame implements LightObserver {
     public SmartCityGUI() {
         // إعدادات النافذة الأساسية
         setTitle("🌿 Smart City Lighting - لوحة التحكم الذكية");
-        setSize(700, 480);
+        setSize(880, 520);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(15, 15));
         setLocationRelativeTo(null);
 
-        // 1. إنشاء الحساس (Subject) وتجهيز المصابيح (Observers)
-        sensor = new StreetSensor();
+        // 1. إنشاء الحساس (Subject) كـ Singleton وتجهيز المصابيح (Observers)
+        sensor = StreetSensor.getInstance();
         light1 = new StreetLight(1);
         light2 = new StreetLight(2);
 
@@ -65,44 +65,64 @@ public class SmartCityGUI extends JFrame implements LightObserver {
 
     // إنشاء لوحة التحكم العلوية
     private void initControlPanel() {
-        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
+        JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 12));
+        controlPanel.setBackground(new Color(32, 32, 32));
         controlPanel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(), 
-                "لوحة التحكم والمحاكاة / Simulation Control", 
+                BorderFactory.createLineBorder(new Color(70, 70, 70), 1, true), 
+                " لوحة التحكم والمحاكاة / Simulation Control ", 
                 TitledBorder.RIGHT, 
                 TitledBorder.TOP, 
-                new Font("Inter", Font.BOLD, 12)
+                new Font("Segoe UI", Font.BOLD, 12),
+                new Color(200, 200, 200)
         ));
 
         // اختيار الوقت
         JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        timePanel.add(new JLabel("الوقت / Time:"));
+        timePanel.setOpaque(false);
+        JLabel timeLabel = new JLabel("الوقت / Time:");
+        timeLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        timeLabel.setForeground(Color.WHITE);
+        timePanel.add(timeLabel);
+        
         String[] times = {"Day", "Night"};
         timeComboBox = new JComboBox<>(times);
-        timeComboBox.setPreferredSize(new Dimension(90, 30));
+        timeComboBox.setPreferredSize(new Dimension(100, 30));
+        timeComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         timePanel.add(timeComboBox);
 
         // استشعار الحركة
         motionCheckBox = new JCheckBox("رصد حركة / Motion Detected");
+        motionCheckBox.setOpaque(false);
+        motionCheckBox.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        motionCheckBox.setForeground(Color.WHITE);
         motionCheckBox.setFocusPainted(false);
 
         // اختيار استراتيجية الإضاءة (Strategy Pattern!)
         JPanel strategyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        strategyPanel.add(new JLabel("الاستراتيجية / Strategy:"));
+        strategyPanel.setOpaque(false);
+        JLabel strategyLabel = new JLabel("الاستراتيجية / Strategy:");
+        strategyLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        strategyLabel.setForeground(Color.WHITE);
+        strategyPanel.add(strategyLabel);
+        
         String[] strategies = {
             "Normal / الوضع العادي",
             "Eco Mode / توفير الطاقة",
             "Security / الأمان العالي"
         };
         strategyComboBox = new JComboBox<>(strategies);
-        strategyComboBox.setPreferredSize(new Dimension(170, 30));
+        strategyComboBox.setPreferredSize(new Dimension(180, 30));
+        strategyComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         strategyPanel.add(strategyComboBox);
 
         // زر التحديث
         JButton applyButton = new JButton("تحديث المحاكاة ⚡");
-        applyButton.setPreferredSize(new Dimension(140, 32));
-        applyButton.setFont(new Font("Inter", Font.BOLD, 12));
+        applyButton.setPreferredSize(new Dimension(150, 32));
+        applyButton.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        applyButton.setBackground(new Color(46, 204, 113)); // Green color
+        applyButton.setForeground(Color.WHITE);
         applyButton.setFocusPainted(false);
+        applyButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         applyButton.addActionListener(e -> updateState());
 
         // إضافة العناصر للوحة التحكم
